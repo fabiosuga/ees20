@@ -4,8 +4,86 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
 <f:view>
-    <h:outputLabel value="Hello, world"/>
+    <h:outputStylesheet name="css/primeflex/primeflex.css"/>
+    <h:outputStylesheet library="webjars" name="font-awesome/5.12.0/css/all.min-jsf.css" />
+    <h:outputStylesheet library="webjars" name="font-awesome/5.12.0/css/v4-shims.min-jsf.css" />
+    <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
+    <h:head></h:head>
+    <h:form id="menu">
+        <p:menuButton value="Menu">
+            <p:menuitem value="Manter Cliente" url="editar_cliente.xhtml?faces-redirect=true"/>
+            <p:menuitem value="Manter Produto" url="editar_produto.xhtml?faces-redirect=true"/>
+            <p:menuitem value="Fazer Pedido" url="editar_pedido.xhtml?faces-redirect=true"/>
+            <p:menuitem value="Ver Pedidos" url="listar_pedido.xhtml?faces-redirect=true"/>
+        </p:menuButton>
+    </h:form>
+    <p:messages>
+        <p:autoUpdate />
+    </p:messages>
+    <br/>
+    <div class="container">
+        <h:form id="editForm">
+            <h2>Pedido</h2>
+            <div class="ui-fluid p-formgrid p-grid">
+                <div class="p-field p-col-12 p-md-2">
+                    <p:outputLabel for="cpf" value="CPF:" />
+                    <p:inputMask mask="999.999.999-99" id="cpf" placeholder="999.999.999-99"
+                                 value="#{listaPedidoController.cpf}"
+                                 required="true" requiredMessage="CPF é obrigatório"/>
+                </div>
+                <div class="p-field p-col-12 p-md-10"></div>
+
+                <div class="p-field p-col-12 p-md-5"></div>
+                <div class="p-field p-col-12 p-md-1">
+                    <p:commandButton styleClass="info-btn" value="Pesquisar" ajax="true" action="#{listaPedidoController.pesquisar}"
+                                     process="@form" update="@([id$=grid])" />
+                </div>
+                <div class="p-field p-col-12 p-md-1">
+                    <p:commandButton styleClass="help-btn" value="Cancelar" ajax="true" action="#{listaPedidoController.reset}"
+                                     process="@form" update="@form,@([id$=grid])"/>
+                </div>
+                <div class="p-field p-col-12 p-md-5"></div>
+
+            </div>
+        </h:form>
+        <div class="ui-fluid p-formgrid p-grid" style="padding: 15px;">
+            <h:form id="grid">
+                <p:dataTable id="dataTable" reflow="true" value="#{listaPedidoController.lstPedido}"
+                             resizableColumns="true"
+                             var="item" emptyMessage="Nenhum registro encontrado.">
+
+                    <p:column headerText="#">
+                        <h:outputText value="#{item.id}" />
+                    </p:column>
+                    <p:column headerText="data">
+                        <h:outputText value="#{item.data}" />
+                    </p:column>
+
+                    <p:column style="width:16px">
+                        <p:rowToggler />
+                    </p:column>
+
+                    <p:rowExpansion>
+                        <p:panel>
+                            <p:dataTable id="dtItemPedido" value="#{item.itensPedido}" var="ip">
+                                <p:column headerText="Produto">
+                                    <h:outputText value="#{ip.produto.descricao}" />
+                                </p:column>
+                                <p:column headerText="Quantidade">
+                                    <h:outputText value="#{ip.quantidade}" />
+                                </p:column>
+                            </p:dataTable>
+                        </p:panel>
+                    </p:rowExpansion>
+                </p:dataTable>
+            </h:form>
+        </div>
+
+
+    </div>
 </f:view>
 </html>

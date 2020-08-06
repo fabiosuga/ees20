@@ -4,8 +4,125 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 <f:view>
-    <h:outputLabel value="Hello, world"/>
+    <h:outputStylesheet name="css/primeflex/primeflex.css"/>
+    <h:outputStylesheet library="webjars" name="font-awesome/5.12.0/css/all.min-jsf.css" />
+    <h:outputStylesheet library="webjars" name="font-awesome/5.12.0/css/v4-shims.min-jsf.css" />
+    <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
+    <h:head></h:head>
+    <h:form id="menu">
+        <p:menuButton value="Menu">
+            <p:menuitem value="Manter Cliente" url="editar_cliente.xhtml?faces-redirect=true"/>
+            <p:menuitem value="Manter Produto" url="editar_produto.xhtml?faces-redirect=true"/>
+            <p:menuitem value="Fazer Pedido" url="editar_pedido.xhtml?faces-redirect=true"/>
+            <p:menuitem value="Ver Pedidos" url="listar_pedido.xhtml?faces-redirect=true"/>
+        </p:menuButton>
+    </h:form>
+    <p:messages>
+        <p:autoUpdate />
+    </p:messages>
+    <br/>
+    <div class="container">
+        <h:form id="editForm">
+            <h2>Pedido</h2>
+            <div class="ui-fluid p-formgrid p-grid">
+            <div class="p-field p-col-12 p-md-12">
+                <div class="p-formgroup-inline">
+                    <div class="p-field p-col-12 p-md-4">
+                    <p:outputLabel for="cliente" value="Cliente:" />
+                    <p:selectOneMenu id="cliente" value="#{pedidoController.pedidoSelected.cliente}"
+                                     converter="clienteConverter"
+                                     effect="fade" var="cliente" filter="true" filterMatchMode="startsWith"
+                                    required="true">
+                        <f:ajax event="change" />
+                        <f:selectItem itemLabel="" itemValue="" noSelectionOption="false"/>
+                        <f:selectItems value="#{pedidoController.lstClientes}" var="cliente" itemLabel="#{cliente.nomeCompleto}" itemValue="#{nome}" />
+                        <p:column>
+                            <h:outputText value="#{cliente.nomeCompleto}" />
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:separator />
+                            <h:outputText value="#{pedidoController.lstClientes.size()} cliente(s)" style="font-weight:bold;"/>
+                        </f:facet>
+                    </p:selectOneMenu>
+                    </div>
+                    <div class="p-field p-col-12 p-md-4">
+                        <p:outputLabel for="produto" value="Produto:" />
+                        <p:selectOneMenu id="produto" value="#{pedidoController.produtoSelected}"
+                                         effect="fade" var="produto" filter="true" filterMatchMode="contains"
+                                         converter="produtoConverter">
+                            <f:ajax event="change" />
+                            <f:selectItem itemLabel="" itemValue="" noSelectionOption="false"/>
+                            <f:selectItems value="#{pedidoController.lstProdutos}" var="produto"
+                                           itemLabel="#{produto.descricao}" itemValue="#{produto}" />
+                            <p:column>
+                                <h:outputText value="#{produto.descricao}" />
+                            </p:column>
+                            <f:facet name="footer">
+                                <p:separator />
+                                <h:outputText value="#{pedidoController.lstProdutos.size()} produto(s)" style="font-weight:bold;"/>
+                            </f:facet>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="p-field p-col-12 p-md-2">
+                        <p:outputLabel for="qtde" styleClass="ui-sr-only" />
+                        <p:inputNumber id="qtde" value="#{pedidoController.quantidadeProduto}" decimalPlaces="0"
+                                       converter="javax.faces.Integer" widgetVar="qtdeWv">
+                            <f:ajax event="change" />
+                        </p:inputNumber>
+                    </div>
+                    <div class="p-field p-col-12 p-md-1">
+                        <p:commandButton value="+" action="#{pedidoController.addProdutoQtde}"
+                                         ajax="true" immediate="true"
+                                         process="@form" update="@form,@([id$=dataTable])" />
+                    </div>
+                    <div class="p-field p-col-12 p-md-12">
+                        <p:dataTable id="dataTable" reflow="true" value="#{pedidoController.pedidoSelected.itensPedido}"
+                                     resizableColumns="true" lazy="true"
+                                     var="item" emptyMessage="Nenhum registro encontrado.">
+
+                            <p:column headerText="Nome do Produto">
+                                <h:outputText value="#{item.produto.descricao}" />
+                            </p:column>
+                            <p:column headerText="Qtde">
+                                <h:outputText value="#{item.quantidade}" />
+                            </p:column>
+
+                            <p:column headerText="Ações" style="text-align: center;" width="10%">
+<!--                                <p:commandButton id="cmdEditar" icon="fa fa-pencil" title="Editar" ajax="true" update=":editForm">-->
+<!--                                    <f:setPropertyActionListener target="# { produtoController.produtoSelected}" value="#{item}" />-->
+<!--                                </p:commandButton>-->
+<!--                                &nbsp;-->
+<!--                                <p:commandButton id="cmdExcluir" icon="fa fa-trash" title="Excluir"-->
+<!--                                                 ajax="true" update=":dataTable" action="# { produtoController.excluir}">-->
+<!--                                    <f:setPropertyActionListener target="#{produtoController.produtoSelected}" value="#{item}" />-->
+<!--                                </p:commandButton>-->
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+
+
+                <div class="p-field p-col-12 p-md-5"></div>
+                <div class="p-field p-col-12 p-md-1">
+                    <p:commandButton styleClass="info-btn" value="Salvar" immediate="false"
+                                     ajax="true" action="#{pedidoController.salvar}"
+                                     process="@form" update="@form,@([id$=grid])"/>
+                </div>
+                <div class="p-field p-col-12 p-md-1">
+                    <p:commandButton styleClass="help-btn" value="Cancelar"
+                                     action="#{pedidoController.reset}"
+                                     ajax="true"
+                                     process="@this" update="@form,@([id$=grid])"/>
+                </div>
+                <div class="p-field p-col-12 p-md-5"></div>
+            </div>
+        </h:form>
+
+    </div>
+    <br/>
 </f:view>
 </html>
