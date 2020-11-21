@@ -24,8 +24,6 @@ public class ProdutoConverter implements Converter {
         {
             return uiComponent.getAttributes().get(value);
         }
-
-        logger.log(Level.INFO, "======> getAsObject: null");
         return null;
     }
 
@@ -41,7 +39,6 @@ public class ProdutoConverter implements Converter {
                 return String.valueOf(entity.getId());
             }
         }
-        logger.log(Level.INFO, "=====> getAsString: null");
         return "";
     }
 }

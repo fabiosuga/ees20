@@ -4,6 +4,8 @@ import br.com.suga.business.ClienteBusiness;
 import br.com.suga.entity.Cliente;
 import javax.annotation.PostConstruct;
 import org.omnifaces.cdi.ViewScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
@@ -76,6 +78,7 @@ public class ClienteController implements Serializable {
         business.salvar(clienteSelected);
         reset();
         lstCliente = business.listarTodos();
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Cliente SALVO com SUCESSO."));
     }
 
     /**
@@ -86,6 +89,7 @@ public class ClienteController implements Serializable {
     public void excluir() throws Exception {
         business.excluir(clienteSelected.getId());
         lstCliente = business.listarTodos();
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Cliente EXCLUÍDO com SUCESSO."));
     }
 
 

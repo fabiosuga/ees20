@@ -10,6 +10,8 @@ import br.com.suga.entity.Produto;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.omnifaces.cdi.ViewScoped;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
@@ -150,6 +152,7 @@ public class PedidoController implements Serializable {
     public void salvar() throws Exception {
         business.salvar(pedidoSelected);
         reset();
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Pedido SALVO com SUCESSO."));
     }
 
     /**

@@ -20,7 +20,7 @@
             <p:menuitem value="Ver Pedidos" url="listar_pedido.xhtml?faces-redirect=true"/>
         </p:menuButton>
     </h:form>
-    <p:messages>
+    <p:messages id="messages" showDetail="true" closable="true">
         <p:autoUpdate />
     </p:messages>
     <br/>
@@ -55,9 +55,9 @@
                                      process="@form" update="@form,@([id$=grid])"/>
                 </div>
                 <div class="p-field p-col-12 p-md-1">
-                    <p:commandButton styleClass="help-btn" value="Cancelar" action="#{clienteController.reset}"
+                    <p:commandButton styleClass="help-btn" value="Cancelar" actionListener="#{clienteController.reset}"
                                      ajax="true"
-                                     process="@this" update="@form,@([id$=grid])"/>
+                                     process="@this" update="@form"/>
                 </div>
                 <div class="p-field p-col-12 p-md-5"></div>
             </div>

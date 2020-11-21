@@ -4,6 +4,8 @@ import br.com.suga.business.ProdutoBusiness;
 import br.com.suga.entity.Produto;
 import javax.annotation.PostConstruct;
 import org.omnifaces.cdi.ViewScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
@@ -76,6 +78,7 @@ public class ProdutoController implements Serializable {
         business.salvar(produtoSelected);
         reset();
         lstProduto = business.listarTodos();
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Produto SALVO com SUCESSO."));
     }
 
     /**
@@ -86,6 +89,7 @@ public class ProdutoController implements Serializable {
     public void excluir() throws Exception {
         business.excluir(produtoSelected.getId());
         lstProduto = business.listarTodos();
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Produto EXCLUÍDO com SUCESSO."));
     }
 
     /**

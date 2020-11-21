@@ -15,7 +15,7 @@ public class Produto implements Serializable {
     private static final long serialVersionUID = 4432431359401366416L;
 
     @Id
-    @SequenceGenerator(name="seq_produto", sequenceName="seq_produto")
+    @SequenceGenerator(name="seq_produto", sequenceName="seq_produto", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_produto")
     private Integer id;
 

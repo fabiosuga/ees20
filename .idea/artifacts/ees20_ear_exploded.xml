@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-ear" name="ees20:ear exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/ees20_ear_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="ees20/javaeeApplication/javaEEApplication" />
+      <element id="directory" name="ejb.jar">
+        <element id="artifact" artifact-name="ees20:ejb exploded" />
+      </element>
+    </root>
+  </artifact>
+</component>

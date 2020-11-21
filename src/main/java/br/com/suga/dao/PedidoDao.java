@@ -1,6 +1,8 @@
 package br.com.suga.dao;
 
 import br.com.suga.entity.Pedido;
+import br.com.suga.util.Util;
+
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -22,7 +24,14 @@ public class PedidoDao {
             "LEFT JOIN FETCH p.cliente c " +
             "LEFT JOIN FETCH p.itensPedido itens " +
             "LEFT JOIN FETCH itens.produto prod " +
-            "WHERE 1=1 and c.cpf = :cpf";
+            "WHERE 1=1 and c.cpf = :cpf " +
+            "ORDER BY p.id";
+    private static final String SELECT_POR_ID = "SELECT distinct p FROM Pedido p " +
+            "LEFT JOIN FETCH p.cliente c " +
+            "LEFT JOIN FETCH p.itensPedido itens " +
+            "LEFT JOIN FETCH itens.produto prod " +
+            "WHERE 1=1 and c.id = :id " +
+            "ORDER BY p.id";
 
     /**
      * Incluir.
@@ -78,8 +87,7 @@ public class PedidoDao {
      */
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public Pedido obterPorId(Integer idPedido) throws Exception {
-        StringBuilder jpql = new StringBuilder(SELECT_ALL);
-        jpql.append(" AND c.id = :id");
+        StringBuilder jpql = new StringBuilder(SELECT_POR_ID);
         return em.createQuery(jpql.toString(), Pedido.class)
                 .setParameter("id", idPedido)
                 .getSingleResult();
@@ -96,7 +104,7 @@ public class PedidoDao {
     public List<Pedido> listarPorCpf(String cpf) throws  Exception {
         StringBuilder jpql = new StringBuilder(SELECT_POR_CPF);
         return em.createQuery(jpql.toString(), Pedido.class)
-                .setParameter("cpf", cpf)
+                .setParameter("cpf", Util.formatarCpf(cpf))
                 .getResultList();
     }
 }

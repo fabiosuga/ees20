@@ -1,5 +1,7 @@
 package br.com.suga.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -14,13 +16,14 @@ public class ItemDoPedido implements Serializable {
     private static final long serialVersionUID = 4116541548048358964L;
 
     @Id
-    @SequenceGenerator(name="seq_item_pedido", sequenceName="seq_item_pedido")
+    @SequenceGenerator(name="seq_item_pedido", sequenceName="seq_item_pedido", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_item_pedido")
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_pedido", referencedColumnName = "id", nullable = false)
     @NotNull(message = "Pedido deve ser selecionado")
+    @JsonIgnore
     private Pedido pedido;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

@@ -1,6 +1,8 @@
 package br.com.suga.dao;
 
 import br.com.suga.entity.Cliente;
+import br.com.suga.util.Util;
+
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -17,7 +19,7 @@ public class ClienteDao {
     @PersistenceContext(unitName = "ees20")
     private EntityManager em;
 
-    private static final String SELECT_ALL = "SELECT c FROM Cliente c WHERE 1=1 ";
+    private static final String SELECT_ALL = "SELECT DISTINCT c FROM Cliente c LEFT JOIN FETCH c.pedidos WHERE 1=1 ";
 
     /**
      * Incluir.
@@ -77,6 +79,16 @@ public class ClienteDao {
         jpql.append(" AND c.id = :id");
         return em.createQuery(jpql.toString(), Cliente.class)
                 .setParameter("id", idCliente)
+                .getSingleResult();
+    }
+
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public Cliente obterPorCpf(String numeroCpf) throws Exception {
+        String cpf = Util.formatarCpf(numeroCpf);
+        StringBuilder jpql = new StringBuilder(SELECT_ALL);
+        jpql.append(" AND c.cpf = :cpf");
+        return em.createQuery(jpql.toString(), Cliente.class)
+                .setParameter("cpf", cpf)
                 .getSingleResult();
     }
 }

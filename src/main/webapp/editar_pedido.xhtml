@@ -20,7 +20,7 @@
             <p:menuitem value="Ver Pedidos" url="listar_pedido.xhtml?faces-redirect=true"/>
         </p:menuButton>
     </h:form>
-    <p:messages>
+    <p:messages id="messages" showDetail="true" closable="true">
         <p:autoUpdate />
     </p:messages>
     <br/>
@@ -74,9 +74,9 @@
                         </p:inputNumber>
                     </div>
                     <div class="p-field p-col-12 p-md-1">
-                        <p:commandButton value="+" action="#{pedidoController.addProdutoQtde}"
+                        <p:commandButton value="+" actionListener="#{pedidoController.addProdutoQtde}"
                                          ajax="true" immediate="true"
-                                         process="@form" update="@form,@([id$=dataTable])" />
+                                         process="@form" update="@([id$=dataTable])" />
                     </div>
                     <div class="p-field p-col-12 p-md-12">
                         <p:dataTable id="dataTable" reflow="true" value="#{pedidoController.pedidoSelected.itensPedido}"
@@ -114,7 +114,7 @@
                 </div>
                 <div class="p-field p-col-12 p-md-1">
                     <p:commandButton styleClass="help-btn" value="Cancelar"
-                                     action="#{pedidoController.reset}"
+                                     actionListener="#{pedidoController.reset}"
                                      ajax="true"
                                      process="@this" update="@form,@([id$=grid])"/>
                 </div>

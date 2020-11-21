@@ -2,6 +2,8 @@ package br.com.suga.business;
 
 import br.com.suga.dao.ClienteDao;
 import br.com.suga.entity.Cliente;
+import br.com.suga.util.Util;
+
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -27,6 +29,8 @@ public class ClienteBusiness {
         if (cliente == null) {
             throw new Exception("Não é possível salvar objeto nulo");
         }
+
+        cliente.setCpf(Util.formatarCpf(cliente.getCpf()));
 
         if (cliente.getId() == null) {
             incluir(cliente);
@@ -61,12 +65,21 @@ public class ClienteBusiness {
     }
 
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    private void incluir(Cliente cliente) throws Exception {
+    public void incluir(Cliente cliente) throws Exception {
+        if (dao.obterPorCpf(cliente.getCpf()) != null) {
+            throw new Exception("Já existe Cliente com o CPF informado");
+        }
+
         dao.incluir(cliente);
     }
 
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    private void alterar(Cliente cliente) throws Exception {
+    public void alterar(Cliente cliente) throws Exception {
         dao.alterar(cliente);
+    }
+
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public Cliente obter(Integer id) throws Exception {
+        return dao.obterPorId(id);
     }
 }

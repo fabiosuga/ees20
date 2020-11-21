@@ -1,6 +1,8 @@
 package br.com.suga.entity;
 
-import org.hibernate.validator.constraints.Length;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.br.CPF;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -18,7 +20,7 @@ public class Cliente implements Serializable {
     private static final long serialVersionUID = 2496550266971392576L;
 
     @Id
-    @SequenceGenerator(name="seq_cliente", sequenceName="seq_cliente")
+    @SequenceGenerator(name="seq_cliente", sequenceName="seq_cliente", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_cliente")
     private Integer id;
 
@@ -37,6 +39,7 @@ public class Cliente implements Serializable {
     private String sobrenome;
 
     @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Pedido> pedidos;
 
     /**

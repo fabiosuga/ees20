@@ -4,6 +4,8 @@ import br.com.suga.dao.PedidoDao;
 import br.com.suga.entity.ItemDoPedido;
 import br.com.suga.entity.Pedido;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.omg.CORBA.portable.ApplicationException;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -30,10 +32,6 @@ public class PedidoBusiness {
      * @throws Exception the exception
      */
     public void salvar(Pedido pedido) throws Exception {
-        if (pedido == null) {
-            throw new Exception("Não é possível salvar objeto nulo");
-        }
-
         if (pedido.getId() == null) {
             incluir(pedido);
         } else {
@@ -77,13 +75,27 @@ public class PedidoBusiness {
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List<Pedido> listarPorCpf(String cpf) throws  Exception {
         if (StringUtils.isBlank(cpf)) {
-            throw new Exception("Não é possível fazer pesquisa com CPF não preenchido");
+            throw new Exception("Não é possível fazer pesquisa com CPF não preenchido.");
         }
+
+        String copia = cpf;
+        copia = copia.replace(".", "").replace("-", "");
+        if (!NumberUtils.isDigits(copia)) {
+            throw new Exception(String.format("%s não é um CPF válido para pesquisa.", cpf));
+        }
+
         return dao.listarPorCpf(cpf);
     }
 
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    private void incluir(Pedido pedido) throws Exception {
+    /**
+     * Incluir.
+     *
+     * @param pedido the pedido
+     * @throws Exception the exception
+     */
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void incluir(Pedido pedido) throws Exception {
+        validarIncluirAlterar(pedido);
         dao.incluir(pedido);
 
         for (ItemDoPedido ip : pedido.getItensPedido()) {
@@ -92,8 +104,36 @@ public class PedidoBusiness {
         }
     }
 
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    private void alterar(Pedido pedido) throws Exception {
+    /**
+     * Alterar.
+     *
+     * @param pedido the pedido
+     * @throws Exception the exception
+     */
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void alterar(Pedido pedido) throws Exception {
+        validarIncluirAlterar(pedido);
         dao.alterar(pedido);
+    }
+
+    /**
+     * Validar inclusao/alteracao de pedido.
+     * @param pedido the pedioo
+     * @throws Exception
+     */
+    private void validarIncluirAlterar(Pedido pedido) throws Exception {
+        if (pedido == null) {
+            throw new Exception("Não é possível salvar objeto nulo");
+        }
+    }
+
+    /**
+     * Obter pedido por id.
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    public Pedido obterPorId(Integer id) throws Exception {
+        return dao.obterPorId(id);
     }
 }

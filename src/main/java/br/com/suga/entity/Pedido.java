@@ -1,5 +1,7 @@
 package br.com.suga.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -15,12 +17,13 @@ public class Pedido implements Serializable {
     private static final long serialVersionUID = 7010069935712573627L;
 
     @Id
-    @SequenceGenerator(name="seq_pedido", sequenceName="seq_pedido")
+    @SequenceGenerator(name="seq_pedido", sequenceName="seq_pedido", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_pedido")
     private Integer id;
 
     @Column(name = "data")
     @Temporal(TemporalType.DATE)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date data;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -6,6 +6,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.List;
 
 @Stateless
@@ -75,5 +76,24 @@ public class ProdutoDao {
         return em.createQuery(jpql.toString(), Produto.class)
                 .setParameter("id", idProduto)
                 .getSingleResult();
+    }
+
+    public Boolean exists(Integer id, String descricao) {
+        StringBuilder jpql = new StringBuilder("SELECT id <> 0 FROM Produto p WHERE UPPER(p.descricao) = UPPER(:descricao) ");
+        if (id != null) {
+            jpql.append(" AND p.id <> :id");
+        }
+
+        Boolean retorno = Boolean.FALSE;
+
+        Query query = em.createQuery(jpql.toString());
+
+        if (id != null) {
+            query.setParameter("id", id);
+        }
+
+        retorno = (Boolean) query.getSingleResult();
+
+        return retorno;
     }
 }
