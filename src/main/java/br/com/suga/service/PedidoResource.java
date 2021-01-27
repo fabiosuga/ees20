@@ -26,7 +26,25 @@ public class PedidoResource {
     public Response listar(@PathParam("cpf") String cpf) {
         List<Pedido> lst = null;
         try {
-            lst = business.listarPorCpf(cpf);
+            if (cpf.isEmpty()) {
+                lst = business.listarTodos();
+            } else {
+                lst = business.listarPorCpf(cpf);
+            }
+        } catch (Exception e) {
+            lst = new ArrayList<>(0);
+        }
+
+        return Response.ok().entity(lst).build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response listar() {
+        List<Pedido> lst = null;
+        try {
+            lst = business.listarTodos();
         } catch (Exception e) {
             lst = new ArrayList<>(0);
         }
@@ -70,7 +88,7 @@ public class PedidoResource {
             return Response.serverError().entity(me).build();
         }
 
-        return Response.status(Response.Status.CREATED).contentLocation(location).build();
+        return Response.status(Response.Status.CREATED).entity(pedido).contentLocation(location).build();
     }
 
 //    @PUT

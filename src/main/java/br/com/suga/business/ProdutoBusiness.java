@@ -67,7 +67,8 @@ public class ProdutoBusiness {
      */
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public void incluir(Produto produto) throws Exception {
-        validarIncluirAlterar(produto);
+        Boolean incluir = Boolean.TRUE;
+        validarIncluirAlterar(produto, incluir);
 
         dao.incluir(produto);
     }
@@ -80,7 +81,8 @@ public class ProdutoBusiness {
      */
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public void alterar(Produto produto) throws Exception {
-        validarIncluirAlterar(produto);
+        Boolean incluir = Boolean.FALSE;
+        validarIncluirAlterar(produto, incluir);
 
         dao.alterar(produto);
     }
@@ -93,22 +95,22 @@ public class ProdutoBusiness {
      * @param produto thr produto
      * @throws Exception
      */
-    private void validarIncluirAlterar(Produto produto) throws Exception {
+    private void validarIncluirAlterar(Produto produto, Boolean incluir) throws Exception {
         if (produto == null) {
             throw new Exception("Não é possível salvar objeto nulo");
         }
 
-//        if (StringUtils.isBlank(produto.getDescricao())) {
-//            throw new Exception("Campo descrição não preenchido");
-//        }
+        if (StringUtils.isBlank(produto.getDescricao())) {
+            throw new Exception("Campo descrição não preenchido");
+        }
 
-        if (produto.getId() != null) {
+        if (!incluir && produto.getId() == null) {
             // nao pode ter produto com mesmo nome
-
+            throw new Exception("Não é possível salvar objeto nulo");
         }
 
         if (dao.exists(produto.getId(), produto.getDescricao())) {
-
+            throw new Exception("Não é pode ter produto com mesmo nome!");
         }
     }
 

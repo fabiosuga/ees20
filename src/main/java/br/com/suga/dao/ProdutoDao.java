@@ -1,10 +1,13 @@
 package br.com.suga.dao;
 
 import br.com.suga.entity.Produto;
+import org.apache.commons.lang3.StringUtils;
+
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
@@ -59,7 +62,8 @@ public class ProdutoDao {
      */
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List<Produto> listarTodos() throws Exception {
-        return em.createQuery(SELECT_ALL).getResultList();
+        String jpql = SELECT_ALL + " ORDER BY p.descricao";
+        return em.createQuery(jpql).getResultList();
     }
 
     /**
@@ -92,7 +96,15 @@ public class ProdutoDao {
             query.setParameter("id", id);
         }
 
-        retorno = (Boolean) query.getSingleResult();
+        if (StringUtils.isNotBlank(descricao)) {
+            query.setParameter("descricao", descricao);
+        }
+
+        try {
+            retorno = (Boolean) query.getSingleResult();
+        } catch (NoResultException nre) {
+            retorno = Boolean.FALSE;
+        }
 
         return retorno;
     }

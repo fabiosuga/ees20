@@ -7,6 +7,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
@@ -63,7 +64,8 @@ public class ClienteDao {
      */
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List<Cliente> listarTodos() throws Exception {
-        return em.createQuery(SELECT_ALL).getResultList();
+        String jpql = SELECT_ALL + " ORDER BY c.nome";
+        return em.createQuery(jpql).getResultList();
     }
 
     /**
@@ -84,11 +86,20 @@ public class ClienteDao {
 
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public Cliente obterPorCpf(String numeroCpf) throws Exception {
+        Cliente cliente = null;
         String cpf = Util.formatarCpf(numeroCpf);
         StringBuilder jpql = new StringBuilder(SELECT_ALL);
         jpql.append(" AND c.cpf = :cpf");
-        return em.createQuery(jpql.toString(), Cliente.class)
-                .setParameter("cpf", cpf)
-                .getSingleResult();
+        try {
+            cliente = em.createQuery(jpql.toString(), Cliente.class)
+                    .setParameter("cpf", cpf)
+                    .getSingleResult();
+        } catch (NoResultException nre) {
+            cliente = null;
+        } catch (Exception e) {
+            throw new Exception("Erro ao procurar cliente por cpf. " + e);
+        }
+
+        return cliente;
     }
 }

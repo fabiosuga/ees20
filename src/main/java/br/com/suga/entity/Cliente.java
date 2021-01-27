@@ -25,7 +25,6 @@ public class Cliente implements Serializable {
     private Integer id;
 
     @Column(name = "cpf")
-    @CPF
     @Size(max = 14)
     private String cpf;
 

@@ -1,9 +1,9 @@
 package br.com.suga.service;
 
 import br.com.suga.business.ProdutoBusiness;
+import br.com.suga.entity.Cliente;
 import br.com.suga.entity.Produto;
 import br.com.suga.exception.ApiError;
-
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -50,13 +50,14 @@ public class ProdutoResource {
             return Response.serverError().entity(me).build();
         }
 
-        return Response.status(Response.Status.CREATED).contentLocation(location).build();
+        return Response.status(Response.Status.CREATED).entity(produto).contentLocation(location).build();
     }
 
     @PUT
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response alterar(@Valid Produto produto) {
+    @Path("/{id}")
+    public Response alterar(@PathParam("id") Integer id, @Valid Produto produto) {
         if (produto == null) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -68,7 +69,7 @@ public class ProdutoResource {
             return Response.serverError().entity(me).build();
         }
 
-        return Response.status(Response.Status.OK).build();
+        return Response.status(Response.Status.OK).entity(produto).build();
     }
 
     @DELETE

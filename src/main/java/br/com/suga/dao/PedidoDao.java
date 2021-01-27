@@ -19,7 +19,11 @@ public class PedidoDao {
     @PersistenceContext(unitName = "ees20")
     private EntityManager em;
 
-    private static final String SELECT_ALL = "SELECT p FROM Pedido p WHERE 1=1 ";
+    private static final String SELECT_ALL = "SELECT distinct p FROM Pedido p " +
+            "LEFT JOIN FETCH p.cliente c " +
+            "LEFT JOIN FETCH p.itensPedido itens " +
+            "LEFT JOIN FETCH itens.produto prod " +
+            "ORDER BY p.id";
     private static final String SELECT_POR_CPF = "SELECT distinct p FROM Pedido p " +
             "LEFT JOIN FETCH p.cliente c " +
             "LEFT JOIN FETCH p.itensPedido itens " +

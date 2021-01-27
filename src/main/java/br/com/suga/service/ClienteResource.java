@@ -51,13 +51,14 @@ public class ClienteResource {
             return Response.serverError().entity(me).build();
         }
 
-        return Response.status(Response.Status.CREATED).contentLocation(location).build();
+        return Response.status(Response.Status.CREATED).entity(cliente).contentLocation(location).build();
     }
 
     @PUT
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response alterar(@Valid Cliente cliente) {
+    @Path("/{id}")
+    public Response alterar(@PathParam("id") Integer id, @Valid Cliente cliente) {
         if (cliente == null) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -69,7 +70,7 @@ public class ClienteResource {
             return Response.serverError().entity(me).build();
         }
 
-        return Response.status(Response.Status.OK).build();
+        return Response.status(Response.Status.OK).entity(cliente).build();
     }
 
     @DELETE

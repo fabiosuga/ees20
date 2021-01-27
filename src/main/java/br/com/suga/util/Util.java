@@ -29,7 +29,7 @@ public class Util {
         }
 
         String zeros = "00000000000";
-        int tamanho = numero.length();
+        final int tamanho = numero.length();
         String auxiliar = numero;
 
         if (tamanho < 11) {
